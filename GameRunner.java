@@ -204,7 +204,6 @@ public class GameRunner
                                 // x = getInt(9, 1);
                                 x = board.waitForButton();
                              }
-                             System.err.println("You moved as x " + x);
                             xAI.observe(bd, x);//add this in later too
                             bd = board.xPlays(bd, x);//make the move
                             turn++;
@@ -229,7 +228,6 @@ public class GameRunner
                                 // x = getInt(9, 1);
                                 x = board.waitForButton();
                             }
-                            System.err.println("You moved as o " + x);
                             oAI.observe(bd, x);
                             bd = board.oPlays(bd, x);
                             turn++;
@@ -249,44 +247,6 @@ public class GameRunner
         }
         System.out.println("Wins: " + Xwins);
     }
-//    public static int getInt(int max, int min) //WORK HERE Scanner is broken
-//    {
-//        Scanner scan = new Scanner(System.in);
-//        int n = 0;
-//        try { //This makes sure the user gives a valid input.
-//        //	while (!scan.hasNextInt()) {
-//        //		try {
-//		//			Thread.sleep(1000);
-//		//		} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//		//			e.printStackTrace();
-//		//		}
-//        
-//        //	} 
-//        	n = scan.nextInt();
-//            System.out.println(n);
-//            if (n <= max && n >= min) {
-//            scan.close();
-//            return n;
-//            } else {
-//                System.out.println("Invalid input.");
-//                System.out.println("");
-//                scan.close();
-//                return getInt(max, min);
-//            }
-//        } catch (java.util.InputMismatchException e) 
-//        {
-//            System.out.println("Invalid input.");
-//            System.out.println("");
-//            scan.close();
-//            return getInt(max, min);
-//        } catch (NoSuchElementException e)
-//        {
-//        	return getInt(max, min);
-//        }
-//        
-//        
-//    }
     public static int getInt(int max, int min) 
     {
         Scanner scan = new Scanner(System.in);

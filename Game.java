@@ -32,7 +32,7 @@ public class Game
         }
         catch(Exception e)
         {
-            System.out.println("illegal move, passed in" + x);
+            System.err.println("illegal move, passed in" + x);
         }
         return b;
     }
@@ -45,7 +45,7 @@ public class Game
         }
         catch(Exception e)
         {
-            System.out.println("illegal move, passed in" + x);
+            System.err.println("illegal move, passed in" + x);
         }
         return b;
     }
@@ -183,7 +183,7 @@ public class Game
         //WORK HERE
         //remove all the 1s after - in bd
         b = removeNegative1(b);
-        
+        System.out.println("Chance of moving to each spot:");
         System.out.println("[" + b.substring(0,1) + "][" + b.substring(1,2) + "][" + b.substring(2,3) + "]");
         System.out.println("[" + b.substring(3,4) + "][" + b.substring(4,5) + "][" + b.substring(5,6) + "]");
         System.out.println("[" + b.substring(6,7) + "][" + b.substring(7,8) + "][" + b.substring(8,9) + "]");
@@ -194,10 +194,9 @@ public class Game
         while (true){
             if (!waitingForButton)
             {
-            	System.err.println("you pushed a button");
                 return buttonReturned;
             } else {
-                System.out.print("");//I have no idea why this is necessary, but it makes the code work
+                System.out.print("");//This line messes with the threads and makes the code work
             }
         } //waits until waitingForButton = false
     }

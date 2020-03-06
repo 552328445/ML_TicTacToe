@@ -1,59 +1,38 @@
 package com;
 
-/**
- * Brutus is an array and list AI
- *
- * To do: add a method so that if a move is on both the good and bad lists, it gets removed from both
- *
- * @author Eli
- * @version 0.9
- */
-import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Scanner;
 public class Brutus
 {
-    
+    private Game board = new Game();
+	
     private ArrayList<String> thisGameInput;
     private ArrayList<Integer> thisGameOutput;
     
     private ArrayList<String> input;
     private ArrayList<Integer> output;
     private ArrayList<Integer> outputSuccess;
-    private ArrayList<Integer> thisGameOutputSuccess;
     private static File fileInput = new File("brutusInput.txt");
     private static File fileOutput = new File("brutusOutput.txt");
     private static File fileOutputSuccess = new File("brutusOutputSuccess.txt");
-    private Game board = new Game();
     private ArrayList<Integer> memoriesUsed;
     
     private boolean randomEnabled;
     private boolean isObserver;
-    private boolean loseMode;
-    //variable used in the boardEquals method to allow the machine
-    //to virtually flip/rotate the board in its mind, speeding learning by up to 8X
-    //(This does not  here yet, though)
-    private int[] currentBoard = new int[9];
-    //WORK HERE
-    private int[][] oLearningValues = {{}, {2,1}, {3,2,1}, {4,3,2,1}, {5,4,4,4}, {}, {4,5,6,7}, {7,5,6} };
-    
     public Brutus(boolean isObserver)
     {
     	
     	
     	
-        thisGameInput = new ArrayList();
-        thisGameOutput = new ArrayList();
+        thisGameInput = new ArrayList<String>();
+        thisGameOutput = new ArrayList<Integer>();
         
-        input = new ArrayList();
-        output = new ArrayList();
-        outputSuccess = new ArrayList();
-        memoriesUsed = new ArrayList();
-        loseMode = false; //IMPORTANT, IT's IN LOSE MODE
+        input = new ArrayList<String>();
+        output = new ArrayList<Integer>();
+        outputSuccess = new ArrayList<Integer>();
+        memoriesUsed = new ArrayList<Integer>();
         
         this.isObserver = isObserver;
         
@@ -65,19 +44,7 @@ public class Brutus
             System.err.println(output.size());
             System.err.println(outputSuccess.size());
         }
-
-        Scanner scan = new Scanner(System.in);
-        //remove this after improving code to not get stuck
-        //System.out.println("Enable random moving? (Helps when computer gets \"Stuck\")");
-        //try {
-        //    randomEnabled = scan.nextBoolean();//problem here
-        //} catch (java.util.InputMismatchException e)
-        //{
-        //    System.out.println("setting to default: false");
-        //    randomEnabled = false;
-        //}
         randomEnabled = true;
-        //show();
     }
     public int move(String bd, boolean isX)//bd is for board
     {
@@ -102,29 +69,22 @@ public class Brutus
         //loop through the memory
         //if the space is in memory, set chanceOfChoosing to how good of a move it is
         //WORK HERE
-        //int startI = (int)(Math.random() * input.size());
         int startI = 0;
         for (int i = startI; i < input.size(); i++)
-        
-        //for (int i = 0; i < input.size(); i++)
         {
-            if(bd.equals(input.get(i)))//doesn't use virtual board-flip
-            //if (boardEquals(bd, input.get(i)))//uses virtual board-flip
+            if(bd.equals(input.get(i)))
             {
                 memoriesUsed.add(i);
                 //WORK HERE
-                chanceOfChoosing[output.get(i)] = outputSuccess.get(i);//doesn't use virtual board-flip
-                //chanceOfChoosing[currentBoard[output.get(i)] - 1] = outputSuccess.get(i);//uses virtual board-flip
+                chanceOfChoosing[output.get(i)] = outputSuccess.get(i);
             }
         }
         for (int i = 0; i < startI; i++)
         {
-            if(bd.equals(input.get(i)))//doesn't use virtual board-flip
-            //if (boardEquals(bd, input.get(i)))//uses virtual board-flip
+            if(bd.equals(input.get(i)))
             {
                 memoriesUsed.add(i);
-                chanceOfChoosing[output.get(i)] = outputSuccess.get(i);//doesn't use virtual board-flip
-                //chanceOfChoosing[currentBoard[output.get(i)] - 1] = outputSuccess.get(i);//uses virtual board-flip
+                chanceOfChoosing[output.get(i)] = outputSuccess.get(i);
             }
         }
         //Display chanceOfChoosing (remove in final version)
@@ -139,20 +99,7 @@ public class Brutus
 
         //find the best space(prioritizes first in list) and play there, returns -1 for error
         //pick a random order for checking all of the variables
-        //HOW TO MAKE IT LOSE
-        int[] order = new int[9];
-        if (loseMode)
-        {
-        	for (int i = 8; i > 0; i--)
-        	{
-        		order[i] = 8 - i;
-        	}
-        } else {
-        	for (int i = 0; i < 9; i++)//all the possible moves stored in order
-        	{
-            	order[i] = i;
-        	}
-        }
+        int[] order = {0,1,2,3,4,5,6,7,8};//all the possible moves
         if (randomEnabled)
         {
             order = getRandomOrder();
@@ -193,30 +140,6 @@ public class Brutus
         	outputSuccess.add(results);
           input.add(thisGameInput.get(i));
           output.add(thisGameOutput.get(i));
-//            if (results < 4)
-//            {
-//                outputSuccess.add(results - i + 1);
-//                input.add(thisGameInput.get(i));
-//                output.add(thisGameOutput.get(i));
-//            } 
-//            else if (results == 4)
-//            {
-//            	 if (i == 0)
-//            	 {
-//            		 outputSuccess.add(5);
-//            	 } else {
-//            		 outputSuccess.add(4);
-//            	 }
-//                 input.add(thisGameInput.get(i));
-//                 output.add(thisGameOutput.get(i));
-//            }
-//            else {
-//                //WORK HERE
-//                //outputSuccess.add(results + i - 2);//old success code
-//                outputSuccess.add(results + (i/2) - 1);//new success code, being tested
-//                input.add(thisGameInput.get(i));
-//                output.add(thisGameOutput.get(i));  
-//            }
         }
         cleanMemory();
        
@@ -231,7 +154,7 @@ public class Brutus
         System.out.println("output success:" + outputSuccess);
         writeToFiles();
     }
-    //Don't worry about this next method. It just saves variables to files.
+    //This method just saves variables to files.
     public void writeToFiles()
     {
         clearMemoryFiles();
@@ -261,7 +184,7 @@ public class Brutus
             System.out.println("Something strange went wrong with the save files");
         }
     }
-    //Don't worry about this next method. It just loads variables from files
+    //This method just loads variables from files
     public void loadMemoryFromFiles()
     {
         try
@@ -293,7 +216,7 @@ public class Brutus
             System.out.println("brutusFailInput.txt, brutusFailOutput.txt, brutusWinOutput.txt, brutusWinInput.txt");
         }
     }
-    //Empties learning text documents
+    //This method learning text documents
     public static void clearMemoryFiles()
     {
         try 
@@ -311,37 +234,6 @@ public class Brutus
             System.out.println("Something strange went wrong with the save files");
         }
     }
-    //In tic-tac-toe, a game is the same if you rotate or flip the board
-    //This code allows the computer to rotate/flip boards in its mind to speed up learning
-    //preconditions: two 9-digit boards are put in
-    //postconditions: returns if the two boards are equal by rotating or flipping
-    //THIS CODE IS CURRENTLY NOT BEING USED
-    public boolean boardEquals(String bd, String input)
-    {
-        final int[][] EQUIVALENT_BOARDS = {{1,2,3,4,5,6,7,8,9},{7,4,1,8,5,2,9,6,3},{9,8,7,6,5,4,3,2,1},{3,6,9,2,5,8,1,4,7},{3,2,1,6,5,4,9,8,7},{9,6,3,8,5,2,7,4,1},{7,8,9,4,5,6,1,2,3},{1,4,7,2,5,8,3,6,9}};
-        boolean all9Matched = true;
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                if (!bd.substring(EQUIVALENT_BOARDS[i][j] - 1, EQUIVALENT_BOARDS[i][j]).equals(input.substring(j, j+1)))
-                {
-                    all9Matched = false;
-                    break;
-                }
-            }
-            if (all9Matched)
-            {
-                currentBoard = EQUIVALENT_BOARDS[i];//remembers what angle it is looking at for future use
-                                                    
-                return true;
-            } else {
-                all9Matched = true;
-            }
-        }
-        return false;
-    }
-    //WORK HERE (later)
     //This might not work 100%
     //it is supposed to make the memory lists shorter and remove duplicates
     public void cleanMemory()
@@ -349,7 +241,7 @@ public class Brutus
         int firstItemSuccess = -1;
         int lastItemSuccess = -1;
         Integer averageSuccess = -1;
-        for (int i = 0; i < input.size();)//Notice no i++
+        for (int i = 0; i < input.size();)//Notice no i++ because when traversing an array, i is only incremented in certain cases
         {
 
             if ((i != input.lastIndexOf(input.get(i))) && (output.get(i) == output.get(input.lastIndexOf(input.get(i)))))//WORK HERE
@@ -377,7 +269,7 @@ public class Brutus
     //returns a random order of numbers 0-8
     public int[] getRandomOrder()
     {
-        ArrayList<Integer> numbers = new ArrayList();
+        ArrayList<Integer> numbers = new ArrayList<Integer>();
         numbers.add(0);numbers.add(1);numbers.add(2);numbers.add(3);numbers.add(4);numbers.add(5);numbers.add(6);numbers.add(7);numbers.add(8);
         int[] randomOrder = new int[9];
         int randomIndex = 0;
@@ -389,9 +281,7 @@ public class Brutus
         }
         return randomOrder;
     }
-    public void addOpponentMoveToMemory(String board, int reaction)//A better way to do this would be to have a boolean isObserver for this Brutus
-    //also, the "board" and "reaction" variable names are better than input/output
-    //and should be used in the rest of the code as a replacement
+    public void addOpponentMoveToMemory(String board, int reaction)
     {
         //WORK HERE
         thisGameInput.add(board);
