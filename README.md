@@ -1,5 +1,5 @@
 # ML_TicTacToe
-Machine learning in classic tic tac toe
+Machine learning in classic tic tac toe.
 The Artificial Intelligence class is Brutus. It stores past games, moves, and results in 3 text files.
 It uses this information to improve its gameplay.
 Unfortunately, it does not learn well from playing against itself.
